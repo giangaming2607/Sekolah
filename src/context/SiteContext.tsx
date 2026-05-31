@@ -65,7 +65,7 @@ type SiteContextType = {
   addInformationItem: (item: Omit<InformationItem, 'id'>) => Promise<void>;
   deleteInformationItem: (id: string) => Promise<void>;
   isAuthenticated: boolean;
-  login: () => Promise<void>;
+  login: (username?: string, password?: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -115,8 +115,13 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
+    const isLocalAdmin = localStorage.getItem('admin_auth') === 'true';
+    setIsAuthenticated(isLocalAdmin);
+
     const unsub = onAuthStateChanged(auth, (user) => {
-      setIsAuthenticated(!!user);
+      if (!isLocalAdmin && user) {
+        setIsAuthenticated(true);
+      }
     });
     return () => unsub();
   }, []);
@@ -204,13 +209,29 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = async () => {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+  const login = async (username?: string, password?: string) => {
+    if (username === 'admin' && password === 'admin') {
+      localStorage.setItem('admin_auth', 'true');
+      setIsAuthenticated(true);
+      
+      // Try optional anonymous to keep firebase partially happy if we wanted
+      try {
+        const { signInAnonymously } = await import('firebase/auth');
+        await signInAnonymously(auth);
+      } catch (e) {
+        console.warn("Could not sign in anonymously, continuing with local auth");
+      }
+    } else {
+      throw new Error('Username atau password salah.');
+    }
   };
 
   const logout = async () => {
-    await signOut(auth);
+    localStorage.removeItem('admin_auth');
+    setIsAuthenticated(false);
+    try {
+      await signOut(auth);
+    } catch (e) {}
   };
 
   const content: SiteContent = {
