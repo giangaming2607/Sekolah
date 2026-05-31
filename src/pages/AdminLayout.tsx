@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, Navigate, Link, useLocation } from 'react-router-dom';
 import { Menu, X, Settings, Home, LogOut, LayoutDashboard } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
 
 export default function AdminLayout() {
   const { isAuthenticated, logout, content } = useSite();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
   const location = useLocation();
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
+  }, [location.pathname]);
 
   if (!isAuthenticated) {
     return <Navigate to="/admin" replace />;
@@ -25,7 +31,7 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-slate-100 flex font-sans">
       {/* Sidebar Overlay (Mobile) */}
-      {!isSidebarOpen && (
+      {isSidebarOpen && (
         <div 
            className="fixed inset-0 bg-slate-900/50 z-20 md:hidden"
            onClick={toggleSidebar}
