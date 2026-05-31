@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "SiteConfig": {
+      "title": "Site Configuration",
+      "description": "Singleton storing global strings and URLs",
+      "type": "object",
+      "properties": {
+        "schoolName": { "type": "string" },
+        "heroTitle": { "type": "string" },
+        "heroSubtitle": { "type": "string" },
+        "aboutTitle": { "type": "string" },
+        "aboutDescription": { "type": "string" },
+        "contactAddress": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "ppdbTitle": { "type": "string" },
+        "ppdbDescription": { "type": "string" },
+        "ppdbBrochureUrl": { "type": "string" },
+        "copyrightText": { "type": "string" }
+      }
+    },
+    "Registration": {
+      "title": "Registration",
+      "description": "A new student registration record",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "birthDate": { "type": "string" },
+        "parentName": { "type": "string" },
+        "parentPhone": { "type": "string" },
+        "reportCardFile": { "type": "string" },
+        "familyCardFile": { "type": "string" },
+        "birthCertificateFile": { "type": "string" },
+        "submittedAt": { "type": "string" }
+      }
+    },
+    "InformationItem": {
+      "title": "Information Item",
+      "description": "A news or announcement item",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "date": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "site/{configId}": {
+      "schema": "SiteConfig",
+      "description": "Singleton document site/config"
+    },
+    "registrations/{registrationId}": {
+      "schema": "Registration",
+      "description": "New student PPDB registrations"
+    },
+    "informationItems/{informationId}": {
+      "schema": "InformationItem",
+      "description": "Public announcements and information"
+    }
+  }
+}

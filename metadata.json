@@ -1,0 +1,8 @@
+{
+  "name": "Remix: SMAN 2 Depok",
+  "description": "Website Resmi SMAN 2 Depok - Unggul dalam Prestasi, Berkarakter dalam Budaya",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
